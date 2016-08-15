@@ -124,12 +124,12 @@ public class CleanCommand extends GitCommand<Set<String>> {
 					status.getIgnoredNotInIndex(), false);
 
 			for (String file : notIgnoredFiles)
-				if (paths.isEmpty() || paths.contains(file)) {
+				if (paths.isEmpty() || paths.contains(file) || isFileInPaths(file) ) {
 					files = cleanPath(file, files);
 				}
 
 			for (String dir : notIgnoredDirs)
-				if (paths.isEmpty() || paths.contains(dir)) {
+				if (paths.isEmpty() || paths.contains(dir) || isFileInPaths(dir) ) {
 					files = cleanPath(dir, files);
 				}
 		} catch (IOException e) {
@@ -137,7 +137,15 @@ public class CleanCommand extends GitCommand<Set<String>> {
 		}
 		return files;
 	}
-
+	
+    protected boolean  isFileInPaths(final String file) {
+        if(paths.isEmpty()){
+            return false;
+        }
+        int idx = file.lastIndexOf("/");
+        return  idx == -1  ? false : paths.contains(file.substring(0,idx));
+    }
+	
 	/**
 	 * When dryRun is false, deletes the specified path from disk. If dryRun
 	 * is true, no paths are actually deleted. In both cases, the paths that
