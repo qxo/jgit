@@ -142,8 +142,23 @@ public class CleanCommand extends GitCommand<Set<String>> {
         if(paths.isEmpty()){
             return false;
         }
-        int idx = file.lastIndexOf("/");
-        return  idx == -1  ? false : paths.contains(file.substring(0,idx));
+		String path=file;
+		final Set<String> dirs = new HashSet<String>();
+		while(true){
+			int idx = path.lastIndexOf("/");
+			if( idx> 0 ){
+				path=file.substring(0,idx);
+				if(paths.contains(path)){
+					paths.addAll(dirs);
+					return true;
+				}
+				dirs.add(path);
+			}else{
+				break;
+			}
+			return  idx == -1  ? false : ;
+		}
+		return false;
     }
 	
 	/**
